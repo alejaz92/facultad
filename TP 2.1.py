@@ -187,17 +187,17 @@ def ks_test(data):
 
 # Pruebas de independencia
 
-#Prueba de corridas
-#Arriba y abajo de la media
+    #Prueba de corridas
+        #Arriba y abajo de la media
 
 import numpy as np
-def corr_updown_test(data):
+def runs_media_test(data):
     media = 0.5
     sec = []
     n1 = 0          # valores +
     n2 = 0          # valores -
     N = len(data)   # cantidad de valores
-    Z = 1.96        # debido a confianza del 96%
+    Z_crit = 1.96        # debido a confianza del 95%
 
     for i in range(N - 1):
         if data[i] > media:
@@ -214,23 +214,67 @@ def corr_updown_test(data):
 
 
     
-    medb = ((2 * n1 * n2) /(n1 + n2) ) + 1
+    medb = ((2 * n1 * n2) / N ) + 1
     varb = (2 * n1 * n2 * (2 * n1 * n2 - N))/((N ** 2)* (N - 1))
 
-    lim_inf = -Z * (varb ** (1/2)) + medb
-    lim_sup = Z  * (varb ** (1/2)) + medb
+    Z_calc = abs((b - medb) / (varb ** (1/2)))
 
 
-
-    if b >= lim_inf and b <= lim_sup:
+    if Z_calc <= Z_crit:
         res = "Hipotesis aceptada"
     else:
         res = "Hipotesis rechazada"
-    print(lim_inf)
-    print(lim_sup)
-    print(b)
+
+    print(Z_crit)
+    print(Z_calc)
     
     return res
+    
+    
+        # Arriba y abajo del siguiente numero
+
+import numpy as np
+def runs_test(data):
+    sec = []
+    n1 = 0          # valores +
+    n2 = 0          # valores -
+    N = len(data)   # cantidad de valores
+    Z_crit = 1.96        # debido a confianza del 95%
+
+    for i in range(N - 1):
+        if data[i] > data[i + 1] :
+            sec.append('+')
+            n1 += 1
+        else:
+            sec.append('-')
+            n2 += 1
+    b = 1       # nro de corridas
+
+    for i in range(len(sec)- 1):
+        if sec[i] != sec[i + 1]:
+            b += 1
+
+
+
+    
+    medb = ((2 * N) - 1) / 3
+    varb = ((16 * N) - 29) / 90
+
+    
+    Z_calc = abs((b - medb) / (varb ** (1/2) ))
+
+    if Z_calc <= Z_crit:
+        res = "Hipotesis aceptada"
+    else:
+        res = "Hipotesis rechazada"
+    print(b)
+    print(medb)
+    print(Z_crit)
+    print(Z_calc)
+    #print(b)
+    
+    return res
+    
 
 
 # Prueba de Series
